@@ -1,0 +1,116 @@
+@extends('front.layouts.main')
+@section('page_title', 'Home Page')
+@section('content')
+<div class="inner-content ">
+  <div class="row gy-4">
+    <div class="col-xl-9">
+      <div class="inner-item-heading mb-1">
+        <h2 class="f-24 fw-700 text-white text-uppercase montserrat-font mb-0">PRACTICE GAMES</h2> 
+        @include('front.partials.subheader')
+      </div>
+      <div class="games-tabs-sec">
+        <div class="games-tabs-list">
+          @include('front.partials.navbar')
+          <div class="icon-input" id="searchForm">
+            <input class="icon-input__text-field search" name="search" id="search" type="text" placeholder="Search">
+            <i class="icon-input__icon fa-solid fa-magnifying-glass"></i>
+          </div>
+        </div>
+        <div class="tab-content" id="nav-tabContent">
+          <div class="tab-pane fade" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab" tabindex="0">
+            @if(count($game)>0)
+            <div class="slot-slider">
+              @foreach($game as $key => $data)
+                <div class="slider-item slider-item-{{$data->slug}}">
+                  <div class="slider-frame">
+                    <div class="slider-img">
+                      <img src="{{ $data->image }}" alt="{{ $data->name }}" class="img-fluid">
+                    </div>
+                  </div>
+                  <a href="{{ route('front.practice-room',[$data->slug]) }}" class="btn btn-secondary gradient-bg montserrat-font rounded-pill f-14 fw-600 w-100">{{$data->name}}</a>
+                </div>
+              @endforeach
+            </div>
+            <nav aria-label="Page navigation example">
+              <ul class="pagination justify-content-end pager allCat" id="allCat">
+              </ul>
+            </nav>
+            @else
+            <h4 class="text-white">Coming soon</h4>
+            @endif
+          </div>
+          @foreach($category as $catKey => $cat)
+          @if(count($cat->getGame)>0)
+          <div class="tab-pane fade" id="nav-{{$cat->slug}}" role="tabpanel" aria-labelledby="nav-{{$cat->slug}}-tab" tabindex="0">
+            <div class="slot-slider">
+              @foreach($cat->getGame as $key => $data)
+                <div class="slider-item slider-item-{{$data->slug}}">
+                  <div class="slider-frame">
+                    <div class="slider-img">
+                      <img src="{{ $data->image }}" alt="{{ $data->name }}" class="img-fluid">
+                    </div>
+                  </div>
+                  <a href="{{ route('front.practice-room',[$data->slug]) }}" class="btn btn-secondary gradient-bg montserrat-font rounded-pill f-14 fw-600 w-100">{{$data->name}}</a>
+                </div>
+              @endforeach
+            </div>
+            <nav aria-label="Page navigation example">
+              <ul class="pagination justify-content-end pager" id="{{$cat->slug}}Cat">
+              </ul>
+            </nav>
+          </div>
+          @else
+          <div class="tab-pane fade" id="nav-{{$cat->slug}}" role="tabpanel" aria-labelledby="nav-{{$cat->slug}}-tab"
+            tabindex="0">
+            <h4 class="text-white">Coming soon</h4>
+          </div>
+          @endif
+          @endforeach
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-3">
+      @include('front.partials.announcement')
+    </div>
+  </div>
+</div>
+@endsection
+@push('scripts')
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#nav-all-tab').addClass('active');
+    $('#nav-all').addClass('active show');
+  });
+  /*$('.nav-link').on('click',function () {
+    var id = $(this).attr('id');
+    if(id == 'nav-all-tab'){
+      $('#searchForm').show();
+    }else{
+      $('#searchForm').hide();
+    }
+  });*/
+  $(".search").on('keyup',function (){
+    if($(this).val() != ''){
+      $.ajax({
+        type:"GET",
+        url: '{{ route("front.search") }}',
+        data: {text: $(this).val()},
+        success: function(response) {
+          if(response.status == 'success'){
+            $.each(response.data,function(key,value){
+              $('.slider-item-'+value).show();
+            });
+            $.each(response.data2,function(key,value){
+              $('.slider-item-'+value).hide();
+            });
+          }else{
+            $('.slider-item').hide();
+          } 
+        }
+      });
+    }else{
+      $('.slider-item').show();
+    }
+  });
+</script>
+@endpush
