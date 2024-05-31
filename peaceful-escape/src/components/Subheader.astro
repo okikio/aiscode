@@ -1,0 +1,22 @@
+---
+import { getRequestSegment } from '../utils/request'; // This function should be implemented to get the current URL segment
+// import { useSession } from 'astro-auth'; // This hook should be implemented to check if the user is authenticated
+const requestSegment = getRequestSegment(1, Astro.url);
+// const { isAuthenticated } = useSession();
+
+const isAuthenticated = false
+---
+<div class="games-room-btns desktop">
+  {requestSegment === 'tournaments' && (
+    <a href="/" class={`btn rounded-pill ${requestSegment === '' ? 'gradient-bg' : 'btn-light'} px-5`}>Practice</a>
+  )}
+  {requestSegment === '' && (
+    <>
+      {isAuthenticated ? (
+        <a href="/tournaments" class="btn rounded-pill px-5 btn-light" style="background-color: red; border-color:red">Tournaments</a>
+      ) : (
+        <a href="/login" class="btn rounded-pill btn-light px-5" style="background-color: red; border-color:red">Tournaments</a>
+      )}
+    </>
+  )}
+</div>

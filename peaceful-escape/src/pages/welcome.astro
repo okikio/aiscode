@@ -1,0 +1,128 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Subheader from '../components/Subheader.astro';
+import Navbar from '../components/Navbar.astro';
+import Announcement from '../components/Announcement.astro';
+
+// Assuming you have the game and category data available
+const game = [{ name: "PUZZLE GAMES", slug: "PUZZLE GAMES".replace(/\s+/, "-").toLowerCase(), image: "favicon.svg" }];
+const category = [
+  "PUZZLE GAMES",
+  "ARCADE GAMES",
+  "ACTION GAMES",
+  "CARD GAMES",
+  "SLOTS",
+  "OTHERS",
+].map(x => ({
+  name: x, 
+  slug: x.replace(/\s+/, "-").toLowerCase(),
+  getGame: []
+}));
+---
+<Layout title="Home Page">
+  <div class="inner-content">
+    <div class="row gy-4">
+      <div class="col-xl-9">
+        <div class="inner-item-heading mb-1">
+          <h2 class="f-24 fw-700 text-white text-uppercase montserrat-font mb-0">PRACTICE GAMES</h2>
+          <Subheader />
+        </div>
+        <div class="games-tabs-sec">
+          <div class="games-tabs-list">
+            <Navbar {category} />
+            <div class="icon-input" id="searchForm">
+              <input
+                class="icon-input__text-field search"
+                name="search"
+                id="search"
+                type="text"
+                placeholder="Search"
+              />
+              <i class="icon-input__icon fa-solid fa-magnifying-glass"></i>
+            </div>
+          </div>
+          <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab" tabindex="0">
+              {game.length > 0 ? (
+                <div class="slot-slider">
+                  {game.map((data, key) => (
+                    <div class={`slider-item slider-item-${data.slug}`}>
+                      <div class="slider-frame">
+                        <div class="slider-img">
+                          <img src={data.image} alt={data.name} class="img-fluid" />
+                        </div>
+                      </div>
+                      <a href={`/practice-room/${data.slug}`} class="btn btn-secondary gradient-bg montserrat-font rounded-pill f-14 fw-600 w-100">{data.name}</a>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <h4 class="text-white">Coming soon</h4>
+              )}
+              <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-end pager allCat" id="allCat"></ul>
+              </nav>
+            </div>
+            {category.map((cat, catKey) => (
+              <div class="tab-pane fade" id={`nav-${cat.slug}`} role="tabpanel" aria-labelledby={`nav-${cat.slug}-tab`} tabindex="0" key={catKey}>
+                {cat.getGame?.length > 0 ? (
+                  <div class="slot-slider">
+                    {cat.getGame.map((data, key) => (
+                      <div class={`slider-item slider-item-${data.slug}`} key={key}>
+                        <div class="slider-frame">
+                          <div class="slider-img">
+                            <img src={data.image} alt={data.name} class="img-fluid" />
+                          </div>
+                        </div>
+                        <a href={`/practice-room/${data.slug}`} class="btn btn-secondary gradient-bg montserrat-font rounded-pill f-14 fw-600 w-100">{data.name}</a>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <h4 class="text-white">Coming soon</h4>
+                )}
+                <nav aria-label="Page navigation example">
+                  <ul class="pagination justify-content-end pager" id={`${cat.slug}Cat`}></ul>
+                </nav>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3">
+        <Announcement future_tournaments={[]} winning_data={[]} />
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#nav-all-tab').addClass('active');
+    $('#nav-all').addClass('active show');
+  });
+
+  $(".search").on('keyup', function () {
+    if ($(this).val() != '') {
+      $.ajax({
+        type: "GET",
+        url: '/api/search', // Update this URL to match your actual search endpoint
+        data: { text: $(this).val() },
+        success: function (response) {
+          if (response.status == 'success') {
+            $.each(response.data, function (key, value) {
+              $('.slider-item-' + value).show();
+            });
+            $.each(response.data2, function (key, value) {
+              $('.slider-item-' + value).hide();
+            });
+          } else {
+            $('.slider-item').hide();
+          }
+        }
+      });
+    } else {
+      $('.slider-item').show();
+    }
+  });
+</script>

@@ -1,0 +1,41 @@
+---
+import Video from './Video.astro'; // Assuming you have a Video component
+// import { useSession } from 'astro-auth'; // This hook should be implemented to check if the user is authenticated
+import type { FutureTournament, WinningData } from '../types'; // Assuming you have these types defined
+
+interface Props {
+  future_tournaments: FutureTournament[];
+  winning_data: WinningData[];
+}
+
+// const { isAuthenticated } = useSession();
+const { future_tournaments, winning_data } = Astro.props as Props;
+const isAuthenticated = false;
+---
+<div class="help-box">
+  <Video />
+  {isAuthenticated ? (
+    <a href="/tournaments" class="f-14 fw-600 btn btn-secondary text-uppercase w-100 montserrat-font tournament-btn">Tournaments</a>
+  ) : (
+    <a href="/login" class="f-14 fw-600 btn btn-secondary text-uppercase w-100 montserrat-font tournament-btn">Tournaments</a>
+  )}
+  <div class="tournament-box mt-3">
+    <div class="tournament-header">
+      <h2 class="f-14 fw-700 text-white montserrat-font mb-0">ANNOUNCEMENT</h2>
+    </div>
+    <div class="tournament-item text-center">
+      <div class="tournament-end">
+        {future_tournaments.map((ft) => (
+          <p class="f-12 text-white">
+            {ft.name} Tournament Begins on {new Date(ft.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+          </p>
+        ))}
+        {winning_data.map((wd) => (
+          <p class="f-12 text-white">
+            {wd.getUser.name} wins {wd.reward} in {wd.getTournaments.name} Tournaments
+          </p>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
