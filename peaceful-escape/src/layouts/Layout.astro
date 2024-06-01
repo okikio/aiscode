@@ -1,4 +1,9 @@
 ---
+
+import Header from '../components/Header.astro';
+import Sidebar from '../components/Sidebar.astro';
+import Footer from '../components/Footer.astro';
+
 interface Props {
 	title: string;
 }
@@ -11,41 +16,85 @@ const { title } = Astro.props;
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="description" content="Astro description" />
-		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
+		<title>IWin Gaming | {title}</title>
+
+		<meta name="viewport" content="width=device-width" />
+		<meta name="csrf-token" content="" /> <!-- Add csrf-token logic here if needed -->
+		<link rel="icon" type="image/png" sizes="32x32" href="/front/images/favicon-32x32.png" />
+		<link rel="icon" type="image/png" sizes="16x16" href="/front/images/favicon-16x16.png" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+			referrerpolicy="no-referrer" />
+		<link rel="stylesheet" type="text/css" href="/front/css/bootstrap.min.css" media="all" />
+		<link rel="stylesheet" type="text/css" href="/front/css/owl.carousel.min.css" media="all" />
+		<link rel="stylesheet" type="text/css" href="/front/css/header.css" media="all" />
+		<link rel="stylesheet" type="text/css" href="/front/css/footer.css" media="all" />
+		<link rel="stylesheet" type="text/css" href="/front/css/sidebar.css" media="all" />
+		<link rel="stylesheet" type="text/css" href="/front/css/style.css" media="all" />
+		<!-- Toastr -->
+		<link rel="stylesheet" href="/front/toastr/toastr.min.css">
+		
+		<!-- Add custom CSS stacks if needed -->
+		<slot name="css" />
 	</head>
 	<body>
-		<slot />
+		<div id="preloader" class="preloader" style="display:none;">
+			<div id="loader"></div>
+		</div>
+
+		<!-- header  -->
+		<header id="header">
+			<Header />
+		</header>
+	
+		<div class="content">
+			<div class="container-fluid">
+				<div class="main-content">
+					<div id="sidebar-left">
+						<Sidebar />
+					</div>
+
+					<div class="middle-content py-3 px-md-4 px-3">
+						<slot />
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Button trigger modal -->
+
+		<!-- Modal -->
+		<div class="modal fade" id="movieTick" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="movieTickLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header border-0 p-0">
+						<h1 class="modal-title fs-5" id="movieTickLabel"></h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<h4>Coming Soon</h4>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<footer id="footer" class="primary-bg overflow-hidden">
+			<!-- footer -->
+			<Footer />
+		</footer>
+
+		<script src="/front/js/jquery.min.js" is:inline></script>
+		<script src="/front/js/bundle.min.js" is:inline></script>
+		<script src="/front/js/owl.carousel.min.js" is:inline></script>
+		<script src="/front/js/slider.js" is:inline></script>
+		<script src="/front/toastr/toastr.min.js" is:inline></script>
+
+		<!-- Add custom script stacks if needed -->
+		<slot name="scripts" />
+		<slot name="customJs" />
+
+		<!-- @stack('scripts') -->
+		<!-- @stack('customJs') -->
 	</body>
 </html>
-<style is:global>
-	:root {
-		--accent: 136, 58, 234;
-		--accent-light: 224, 204, 250;
-		--accent-dark: 49, 10, 101;
-		--accent-gradient: linear-gradient(
-			45deg,
-			rgb(var(--accent)),
-			rgb(var(--accent-light)) 30%,
-			white 60%
-		);
-	}
-	html {
-		font-family: system-ui, sans-serif;
-		background: #13151a;
-		background-size: 224px;
-	}
-	code {
-		font-family:
-			Menlo,
-			Monaco,
-			Lucida Console,
-			Liberation Mono,
-			DejaVu Sans Mono,
-			Bitstream Vera Sans Mono,
-			Courier New,
-			monospace;
-	}
-</style>

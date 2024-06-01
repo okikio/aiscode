@@ -1,0 +1,74 @@
+---
+const latestTournament = {
+  // Replace this with actual data fetching logic or props
+  getUser: { name: 'PlayerName' },
+  reward_name: 'RewardName',
+  reward: 'RewardAmount'
+};
+const routes = {
+  aboutUs: '/about-us',
+  ourPartners: '/our-partners',
+  affiliate: '/affiliate',
+  charities: '/charities',
+  advertisers: '/advertisers',
+  sponsors: '/sponsors',
+  specialFeatures: '/special-features',
+  tournamentRules: '/tournament-rules',
+  legal: '/legal',
+  futureFeatures: '/future-features'
+};
+---
+
+<div class="footer-items">
+  <div class="container-fluid">
+    <div class="footer-ad">
+      <div class="justify-content-start footer-ad-one">
+        <img src="/front/images/ad-left.png" alt="" class="img-fluid">
+      </div>
+      {latestTournament && (
+        <div class="win-box mod win-box-hidden">
+          <div class="trophy">
+            <img src="/front/images/cup.png">
+          </div>
+          <div class="spacer"></div>
+          <div class="win-content">
+            <div class="nickname f-10">
+              1ST {latestTournament.getUser.name}
+            </div>
+            <div class="bottom-tournament-name f-10">
+              {latestTournament.reward_name}
+            </div>
+            {latestTournament.reward !== '-' && (
+              <div class="win f-8">
+                <span> WIN: {latestTournament.reward} </span>
+                <img src="/front/images/coin.png">
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+      <div class="justify-self2">
+        <img src="/front/images/ad-right.png" alt="" class="img-fluid">
+      </div>
+    </div>
+    <div class="d-flex justify-content-between align-items-center footer-list">
+      <ul class="footer-ul">
+        <li><a href={routes.aboutUs}>About Us</a></li>
+        <li><a href={routes.ourPartners}>OUR PARTNERS</a></li>
+        <li><a href={routes.affiliate}>Affiliates</a></li>
+        <li><a href={routes.charities}>CHARITIES</a></li>
+        <li><a href={routes.advertisers}>Advertisers</a></li>
+        <li><a href={routes.sponsors}>SPONSORS</a></li>
+        <li><a href={routes.specialFeatures}>SPECIAL FEATURES</a></li>
+        <li><a href={routes.tournamentRules}>TOURNAMENT RULES</a></li>
+        <li><a href={routes.legal}>LEGAL</a></li>
+        <li><a href={routes.futureFeatures}>FUTURE FEATURES </a></li>
+      </ul>
+      <!-- 
+        <a href="javascript:void" class="movie-theter-icon">
+          <img src="/front/images/movie-theter.png" alt="movie-theter">
+        </a> 
+      -->
+    </div>
+  </div>
+</div>

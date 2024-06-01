@@ -2,6 +2,10 @@
 import { getRequestSegment } from '../utils/request'; // This function should be implemented to get the current URL segment
 // import { useSession } from 'astro-auth'; // This hook should be implemented to check if the user is authenticated
 const requestSegment = getRequestSegment(1, Astro.url);
+
+console.log({
+  requestSegment
+})
 // const { isAuthenticated } = useSession();
 
 const isAuthenticated = false

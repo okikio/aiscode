@@ -1,0 +1,177 @@
+---
+import { createSignal } from 'solid-js';
+
+// Simulate auth state and user data for the example. Replace with actual logic.
+const [isAuthenticated, setIsAuthenticated] = createSignal(false);
+const user = { name: 'UserName' };
+
+const location = Astro.url;
+
+// Define routes
+const routes = {
+  home: '/',
+  profile: '/profile',
+  contactUs: '/contact-us',
+  submitGame: '/submit-game',
+  logout: '/logout',
+  login: '/login',
+  register: '/register',
+  tournaments: '/tournaments',
+  aboutUs: '/about-us',
+  ourPartners: '/our-partners',
+  affiliate: '/affiliate',
+  charities: '/charities',
+  advertisers: '/advertisers',
+  sponsors: '/sponsors',
+  specialFeatures: '/special-features',
+  tournamentRules: '/tournament-rules',
+  legal: '/legal',
+  futureFeatures: '/future-features'
+};
+---
+
+<nav class="navbar navbar-expand-lg">
+  <div class="container-fluid">
+    <a class="navbar-brand" href={routes.home}><img class="logo" src="/front/images/iwin-logo.svg" alt="iwin-logo"></a>
+    <div class="desktop-profile px-3 flex-lg-row flex-column align-items-center gap-3">
+      {isAuthenticated() && (
+        <a class="user-profile" href={routes.profile}>
+          <p class="mb-0 f-13 text-white">Welcome <span class="text-uppercase primary-color fw-700">{user.name}</span></p>
+          <div class="user-profile-img">
+            <img src="/front/images/user-profile.png" alt="" class="img-fluid">
+          </div>
+        </a>
+      )}
+      <div class="header-ads">
+        <img src="/front/images/ad-left.png" alt="" class="img-fluid">
+      </div>
+    </div>
+    <div class="welcome-btn">
+      <!-- Uncomment and use the appropriate element if needed -->
+      <!-- <img src="/front/images/video-to-gif.gif" alt=""> -->
+      <!-- <video id="welcome-video" autoplay="autoplay" controls="" width="100%" height="40">
+        <source src="/front/videos/iWin_Gaming.mp4" type="video/mp4">
+      </video> -->
+      <img src="/front/images/welcomegraphic.gif" alt="">
+    </div>
+    <div class="align-items-center header-right-side">
+      <form class="navbar-form navbar-left p-0" role="search">
+        <button id='search-button' class=''><span class='fa-solid fa-magnifying-glass'></span></button>
+        <div id='search-form' class="form-group">
+          <div class="input-group">
+            <span id='search-icon' class="input-group-addon"><span class='fa-solid fa-magnifying-glass'></span></span>
+            <input type="text" class="form-control search" name="search" id="search" placeholder="Search">
+          </div>
+        </div>
+      </form>
+      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+    <div class="offcanvas offcanvas-start" id="navbarNav">
+      <div class="offcanvas-header">
+        {isAuthenticated() && (
+          <a class="user-profile" href={routes.profile}>
+            <p class="mb-0 f-13 text-white">Welcome <span class="text-uppercase primary-color fw-700">{user.name}</span></p>
+            <div class="user-profile-img">
+              <img src="/front/images/user-profile.png" alt="" class="img-fluid">
+            </div>
+          </a>
+        )}
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <div class="text-end movie-ticket-box">
+          <button type="button" data-bs-toggle="modal" data-bs-target="#movieTick" class="movie-theter-icon">
+            <img src="/front/images/movie-theter.png" alt="movie-theter">
+          </button>
+        </div>
+      </div>
+      <div class="offcanvas-body align-items-baseline">
+        <ul class="navbar-nav ms-lg-auto ms-md-0 align-items-lg-center desktop-menu">
+          <li class="nav-item">
+            <a class="btn btn-primary {location.pathname === routes.home ? 'active' : ''}" href={routes.home}>Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-primary {location.pathname === routes.contactUs ? 'active' : ''}" href={routes.contactUs}>Contact</a>
+          </li>
+          {isAuthenticated() ? (
+            <>
+              <!-- Uncomment if needed
+              <li class="nav-item">
+                <button class="gaming-outline-btn">
+                  <a href={routes.submitGame} class="btn">Submit a Game</a>
+                </button>
+              </li>
+              -->
+              <li class="nav-item">
+                <button class="gaming-outline-btn">
+                  <a href={routes.logout} class="btn">Sign Out</a>
+                </button>
+              </li>
+            </>
+          ) : (
+            <>
+              <li class="nav-item">
+                <a href={routes.login} class={"btn rounded-0 " + (location.pathname === routes.login ? 'gaming-btn' : 'gaming-outline-btn')}>
+                  Sign In
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href={routes.register} class={"btn rounded-0 " + (location.pathname === routes.register ? 'gaming-btn' : 'gaming-outline-btn')}>
+                  Sign Up
+                </a>
+              </li>
+            </>
+          )}
+          <li class="nav-item">
+            <button type="button" data-bs-toggle="modal" data-bs-target="#movieTick" class="movie-theter-icon">
+              <img src="/front/images/movie-theter.png" alt="movie-theter">
+            </button>
+          </li>
+        </ul>
+        <div class="mobile-menu">
+          <ul class="navbar-nav ms-lg-auto ms-md-0 align-align-items-lg-center">
+            <li class="nav-item">
+              <div class="games-room-btns mobile-btn">
+                <a href={routes.home} class="btn rounded-pill gradient-bg">Practice</a>
+                {isAuthenticated() ? (
+                  <a href={routes.tournaments} class="btn rounded-pill btn-light" style="background-color: red; border-color: red;">Tournaments</a>
+                ) : (
+                  <a href={routes.login} class="btn rounded-pill btn-light" style="background-color: red; border-color: red;">Tournaments</a>
+                )}
+              </div>
+            </li>
+            <li class="nav-item"><a href={routes.home}>Home</a></li>
+            <li class="nav-item"><a href={routes.aboutUs}>About Us</a></li>
+            <li class="nav-item"><a href={routes.ourPartners}>Our Partners</a></li>
+            <li class="nav-item"><a href={routes.affiliate}>Affiliates</a></li>
+            <li class="nav-item"><a href={routes.charities}>Charities</a></li>
+            <li class="nav-item"><a href={routes.advertisers}>Advertisers</a></li>
+            <li class="nav-item"><a href={routes.sponsors}>Sponsors</a></li>
+            <li class="nav-item"><a href={routes.specialFeatures}>Special Features</a></li>
+            <li class="nav-item"><a href={routes.tournamentRules}>Tournament Rules</a></li>
+            <li class="nav-item"><a href={routes.legal}>Legal</a></li>
+            <li class="nav-item"><a href={routes.futureFeatures}>Future Features</a></li>
+          </ul>
+          <div class="header-social-media">
+            <p class="mb-0 text-white montserrat-font">Follow us</p>
+            <ul>
+              <li><a href="https://www.facebook.com/people/IWin-Gaming/100083289045045/" target="_blank"><i class="fa-brands fa-facebook-f"></i></a></li>
+              <li><a href="https://www.instagram.com/iwingamers/" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
+              <li><a href="https://twitter.com" target="_blank"><i class="fa-brands fa-twitter"></i></a></li>
+              <li><a href="https://www.linkedin.com" target="_blank"><i class="fa-brands fa-linkedin"></i></a></li>
+            </ul>
+          </div>
+          {isAuthenticated() ? (
+            <div class="log-btn">
+              <a href={routes.logout} class="btn gaming-btn rounded-0">Sign Out</a>
+            </div>
+          ) : (
+            <div class="log-btn">
+              <a href={routes.login} class="btn gaming-btn rounded-0">Sign In</a>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
