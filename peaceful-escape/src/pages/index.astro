@@ -5,24 +5,10 @@ import Layout from '../layouts/Layout.astro';
 import Announcement from '../components/Announcement.astro';
 import Navbar from '../components/Navbar.astro';
 
-// Assuming you have the game and category data available
-const game = [{ name: "PUZZLE GAMES", slug: "PUZZLE GAMES".replace(/\s+/, "-").toLowerCase(), image: "favicon.svg" }];
-const category = [
-  "PUZZLE GAMES",
-  "ARCADE GAMES",
-  "ACTION GAMES",
-  "CARD GAMES",
-  "SLOTS",
-  "OTHERS",
-].map(x => ({
-  name: x, 
-  slug: x.replace(/\s+/, "-").toLowerCase(),
-  getGame: [{
-		slug: "very",
-		image: "/favicon.svg",
-		name: "Favicon"
-	}]
-}));
+import { games } from '../data/data.ts';
+import { category } from '../data/category.ts';
+
+export const prerender = true;
 ---
 <Layout title="Home Page">
   <div class="inner-content">
@@ -48,13 +34,13 @@ const category = [
           </div>
           <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab" tabindex="0">
-              {game.length > 0 ? (
+              {games.length > 0 ? (
                 <div class="slot-slider">
-                  {game.map((data, key) => (
+                  {games.map((data, key) => (
                     <div class={`slider-item slider-item-${data.slug}`}>
                       <div class="slider-frame">
                         <div class="slider-img">
-                          <img src={data.image} alt={data.name} class="img-fluid" />
+                          <img src={data?.image} alt={data.name} class="img-fluid" />
                         </div>
                       </div>
                       <a href={`/practice-room/${data.slug}`} class="btn btn-secondary gradient-bg montserrat-font rounded-pill f-14 fw-600 w-100">{data.name}</a>
@@ -95,7 +81,16 @@ const category = [
         </div>
       </div>
       <div class="col-xl-3">
-        <Announcement future_tournaments={[]} winning_data={[]} />
+        <Announcement 
+          announcements={[
+            "New tournaments starting soon.  Check back frequently.",
+            "Check out our Partners Page to see which nonprofits and celebrities we are working with.",
+            "If you represent a NPO and would like to benefit from partnering with us, drop us a note.",
+            "The prize values in our tournaments will continue to grow.  Check back regularly."
+          ]} 
+          future_tournaments={[]} 
+          winning_data={[]} 
+        />
       </div>
     </div>
   </div>
@@ -114,23 +109,32 @@ const category = [
 					$('#searchForm').hide();
 				}
 			});*/
+      $("#search-button").on("click", () => {
+        console.log({
+          search: $("#search-form #search")
+        })
+        $("#search-form #search").focus();
+      })
 			$(".search").on('keyup',function (){
 				if($(this).val() != ''){
 					$.ajax({
 						type:"GET",
-						url: '{{ route("front.search") }}',
+						url: '/search',
 						data: {text: $(this).val()},
 						success: function(response) {
 							if(response.status == 'success'){
+                console.log("---Success---");
+                $('.slider-item').hide();
 								$.each(response.data,function(key,value){
+                  console.log({
+                    key,
+                    value
+                  })
 									$('.slider-item-'+value).show();
 								});
-								$.each(response.data2,function(key,value){
-									$('.slider-item-'+value).hide();
-								});
-							}else{
-								$('.slider-item').hide();
-							} 
+							} else {
+                $('.slider-item').show();
+              }
 						}
 					});
 				}else{

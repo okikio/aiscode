@@ -4,12 +4,13 @@ import Video from './Video.astro'; // Assuming you have a Video component
 import type { FutureTournament, WinningData } from '../types'; // Assuming you have these types defined
 
 interface Props {
+  announcements?: string[];
   future_tournaments: FutureTournament[];
   winning_data: WinningData[];
 }
 
 // const { isAuthenticated } = useSession();
-const { future_tournaments, winning_data } = Astro.props as Props;
+const { announcements = [], future_tournaments, winning_data } = Astro.props as Props;
 const isAuthenticated = false;
 ---
 <div class="help-box">
@@ -25,6 +26,9 @@ const isAuthenticated = false;
     </div>
     <div class="tournament-item text-center">
       <div class="tournament-end">
+        {announcements.map((announcement) => (
+          <p class="f-12 text-white">{announcement}</p>
+        ))}
         {future_tournaments.map((ft) => (
           <p class="f-12 text-white">
             {ft.name} Tournament Begins on {new Date(ft.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}

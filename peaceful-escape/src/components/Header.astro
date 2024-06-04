@@ -34,25 +34,39 @@ const routes = {
   <div class="container-fluid">
     <a class="navbar-brand" href={routes.home}><img class="logo" src="/front/images/iwin-logo.svg" alt="iwin-logo"></a>
     <div class="desktop-profile px-3 flex-lg-row flex-column align-items-center gap-3">
-      {isAuthenticated() && (
-        <a class="user-profile" href={routes.profile}>
-          <p class="mb-0 f-13 text-white">Welcome <span class="text-uppercase primary-color fw-700">{user.name}</span></p>
-          <div class="user-profile-img">
-            <img src="/front/images/user-profile.png" alt="" class="img-fluid">
-          </div>
-        </a>
-      )}
-      <div class="header-ads">
-        <img src="/front/images/ad-left.png" alt="" class="img-fluid">
+      <a class="user-profile" href={routes.profile}>
+        {isAuthenticated() && (
+          <>
+            <p class="mb-0 f-13 text-white">Welcome <span class="text-uppercase primary-color fw-700">{user.name}</span></p>
+            <div class="user-profile-img">
+              <img src="/front/images/user-profile.png" alt="" class="img-fluid">
+            </div>
+          </>
+        )}
+      </a>
+        <!-- 
+          <div class="header-ads">
+          <script type="text/javascript">
+            atOptions = {
+              'key' : '586bb6c7e998732050750222dcbae9da',
+              'format' : 'iframe',
+              'height' : 60,
+              'width' : 468,
+              'params' : {}
+            };
+        </script>
+          <script  type="text/javascript" src="https://www.topcreativeformat.com/586bb6c7e998732050750222dcbae9da/invoke.js"></script>
+      
+        </div> 
+        -->
+      <div class="welcome-btn">
+        <!-- Uncomment and use the appropriate element if needed -->
+        <!-- <img src="/front/images/video-to-gif.gif" alt=""> -->
+        <!-- <video id="welcome-video" autoplay="autoplay" controls="" width="100%" height="40">
+          <source src="/front/videos/iWin_Gaming.mp4" type="video/mp4">
+        </video> -->
+        <img src="/front/images/welcomegraphic.gif" alt="">
       </div>
-    </div>
-    <div class="welcome-btn">
-      <!-- Uncomment and use the appropriate element if needed -->
-      <!-- <img src="/front/images/video-to-gif.gif" alt=""> -->
-      <!-- <video id="welcome-video" autoplay="autoplay" controls="" width="100%" height="40">
-        <source src="/front/videos/iWin_Gaming.mp4" type="video/mp4">
-      </video> -->
-      <img src="/front/images/welcomegraphic.gif" alt="">
     </div>
     <div class="align-items-center header-right-side">
       <form class="navbar-form navbar-left p-0" role="search">
