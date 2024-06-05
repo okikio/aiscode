@@ -17,12 +17,21 @@ export interface Game {
 }
 
 export const games: Game[] = [
+  // ARCADE GAMES
+  {
+    category: Category.ARCADE_GAMES,
+    name: 'Pummel A Politician',
+    slug: 'pummel-a-politician',
+    image: 'https://www.iwingaming.com/storage/game/qyfq1fyARY.png',
+    alt: 'Pummel A Politician',
+    url: 'https://www.iwingaming.com/practice-room/pummel-a-politician'
+  },
   // PUZZLE GAMES
   {
     category: Category.PUZZLE_GAMES,
     name: 'TiKiMATCH 3',
     slug: 'tikimatch-3',
-    image: 'https://www.iwingaming.com/storage/game/oG6EfEGgYh.png',
+    image: '/front/images/tikimatch.png',
     alt: 'TiKiMATCH 3',
     url: 'https://www.iwingaming.com/practice-room/tikimatch-3'
   },
@@ -34,32 +43,6 @@ export const games: Game[] = [
     alt: 'ClownMatch 3',
     url: 'https://www.iwingaming.com/practice-room/clownmatch-3'
   },
-  {
-    category: Category.PUZZLE_GAMES,
-    name: 'Jigsaw Deluxe Puzzle',
-    slug: 'jigsaw-deluxe-puzzle',
-    image: 'https://www.iwingaming.com/storage/game/YevgROT1b3.png',
-    alt: 'Jigsaw Deluxe Puzzle',
-    url: 'https://www.iwingaming.com/practice-room/jigsaw-deluxe-puzzle'
-  },
-  {
-    category: Category.PUZZLE_GAMES,
-    name: 'Word Up',
-    slug: 'word-up',
-    image: 'https://www.iwingaming.com/storage/game/Gwrl6V470g.png',
-    alt: 'Word Up',
-    url: 'https://www.iwingaming.com/practice-room/word-up'
-  },
-  // ARCADE GAMES
-  {
-    category: Category.ARCADE_GAMES,
-    name: 'Pummel A Politician',
-    slug: 'pummel-a-politician',
-    image: 'https://www.iwingaming.com/storage/game/qyfq1fyARY.png',
-    alt: 'Pummel A Politician',
-    url: 'https://www.iwingaming.com/practice-room/pummel-a-politician'
-  },
-  // ACTION GAMES
   {
     category: Category.ACTION_GAMES,
     name: 'DEAD CITY',
@@ -85,21 +68,20 @@ export const games: Game[] = [
     url: 'https://www.iwingaming.com/practice-room/american-football'
   },
   {
-    category: Category.ACTION_GAMES,
-    name: 'Slot Kungfu',
-    slug: 'slot-kungfu',
-    image: 'https://www.iwingaming.com/storage/game/MqVwSV4if4.png',
-    alt: 'Slot Kungfu',
-    url: 'https://www.iwingaming.com/practice-room/slot-kungfu'
-  },
-  // CARD GAMES
-  {
     category: Category.CARD_GAMES,
     name: 'Black Jack Casino',
     slug: 'black-jack-casino',
     image: 'https://www.iwingaming.com/storage/game/S5q8b5Ua2i.png',
     alt: 'Black Jack Casino',
     url: 'https://www.iwingaming.com/practice-room/black-jack-casino'
+  },
+  {
+    category: Category.SLOTS,
+    name: 'Pirate Slot',
+    slug: 'pirate-slot',
+    image: 'https://www.iwingaming.com/storage/game/954dmtHXn5.png',
+    alt: 'Pirate Slot',
+    url: 'https://www.iwingaming.com/practice-room/pirate-slot'
   },
   {
     category: Category.CARD_GAMES,
@@ -118,6 +100,14 @@ export const games: Game[] = [
     url: 'https://www.iwingaming.com/practice-room/casino-cards-memory'
   },
   {
+    category: Category.PUZZLE_GAMES,
+    name: 'Jigsaw Deluxe Puzzle',
+    slug: 'jigsaw-deluxe-puzzle',
+    image: 'https://www.iwingaming.com/storage/game/YevgROT1b3.png',
+    alt: 'Jigsaw Deluxe Puzzle',
+    url: 'https://www.iwingaming.com/practice-room/jigsaw-deluxe-puzzle'
+  },
+  {
     category: Category.CARD_GAMES,
     name: 'Mahjong Deluxe',
     slug: 'mahjong-deluxe',
@@ -133,15 +123,23 @@ export const games: Game[] = [
     alt: 'Pyramid Solitaire',
     url: 'https://www.iwingaming.com/practice-room/pyramid-solitaire'
   },
-  // SLOTS
   {
-    category: Category.SLOTS,
-    name: 'Pirate Slot',
-    slug: 'pirate-slot',
-    image: 'https://www.iwingaming.com/storage/game/954dmtHXn5.png',
-    alt: 'Pirate Slot',
-    url: 'https://www.iwingaming.com/practice-room/pirate-slot'
+    category: Category.ACTION_GAMES,
+    name: 'Slot Kungfu',
+    slug: 'slot-kungfu',
+    image: 'https://www.iwingaming.com/storage/game/MqVwSV4if4.png',
+    alt: 'Slot Kungfu',
+    url: 'https://www.iwingaming.com/practice-room/slot-kungfu'
   },
+  {
+    category: Category.PUZZLE_GAMES,
+    name: 'Word Up',
+    slug: 'word-up',
+    image: 'https://www.iwingaming.com/storage/game/Gwrl6V470g.png',
+    alt: 'Word Up',
+    url: 'https://www.iwingaming.com/practice-room/word-up'
+  },
+  // SLOTS
   {
     category: Category.SLOTS,
     name: 'The Gold Pot Casino',

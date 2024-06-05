@@ -11,5 +11,13 @@ export default defineConfig({
     solid(),
   ],
   output: "hybrid",
-  adapter: vercel()
+  adapter: vercel(),
+  experimental: {
+    actions: true,
+  },
+  vite: {
+    optimizeDeps: {
+      exclude: ["oslo"]
+    }
+  }
 });
