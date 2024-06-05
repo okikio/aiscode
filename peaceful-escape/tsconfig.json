@@ -8,5 +8,17 @@
       "~/*": ["./src/*"]
     },
     "baseUrl": ".",
-  }
+  },
+  "exclude": [
+    "../database/**/*",
+    "../app/**/*",
+    "../public/**/*",
+    "../routes/**/*",
+    "../tests/**/*",
+    "../config/**/*",
+    "../bootstrap/**/*",
+    "../vendor/**/*",
+    "../resources/**/*",
+    "../node_modules/**/*"
+  ]
 }

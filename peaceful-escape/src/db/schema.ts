@@ -1,10 +1,11 @@
-import { pgTable, text, varchar, timestamp, primaryKey, integer } from 'drizzle-orm/pg-core';
-import { relations } from 'drizzle-orm';
+import { pgTable, text, varchar, timestamp, integer } from 'drizzle-orm/pg-core';
 
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
   username: varchar('username').notNull(),
-  hash: varchar('hash').notNull(),
+  githubId: text("github_id").unique(),
+  googleId: text("google_id").unique(),
+  hash: varchar('hash'),
   email: varchar('email').unique().notNull(),
   image: text("image"),
   bio: text('bio'),

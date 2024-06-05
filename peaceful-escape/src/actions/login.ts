@@ -1,15 +1,12 @@
-import { Result } from "@oxi/result";
-import { z } from "zod";
+import { eq, or } from "drizzle-orm/expressions";
 
+import { verify } from "~/utils/passsword.ts";
 import { lucia } from "~/auth/auth.ts";
 import { user } from "~/db/schema.ts";
 import { db } from "~/db/db.ts";
 
-import { generateIdFromEntropySize } from "lucia";
-import { hash } from "~/utils/passsword.ts";
-
-import { PostgresError } from "postgres";
-import { eq, or } from "drizzle-orm/expressions";
+import { Result } from "@oxi/result";
+import { z } from "zod";
 
 export const schema = z.object({
   // username must be between 4 ~ 31 characters, and only consists of lowercase letters, 0-9, -, and _
@@ -25,18 +22,7 @@ export async function handler(props: z.infer<typeof schema>) {
   if (!success) return Result.Err(error);
 
   try {
-    const userId = generateIdFromEntropySize(16); // 16 characters long
-    const passwordHash = await hash(password);
-
-    // TODO: check if username is already used
-    await db.insert(user).values({
-      id: userId,
-      username: username,
-      hash: passwordHash,
-      email: email
-    });
-
-    const savedHash = await db.select({
+    const users = await db.select({
       id: user.id,
       hash: user.hash
     }).from(user).where(
@@ -44,16 +30,20 @@ export async function handler(props: z.infer<typeof schema>) {
         eq(user.username, username),
         eq(user.email, email)
       )
-    )
+    );
 
-    const session = await lucia.createSession(userId, {});
-    const sessionCookie = lucia.createSessionCookie(session.id);
-    return Result.Ok(sessionCookie);
-  } catch (e) {
-    if (e instanceof PostgresError && /unique_violation/i.test(e.code)) {
-      return Result.Err("Username already used");
+    const userData = users?.[0];
+    if (userData) {
+      const verified = await verify(userData.hash, password);
+      if (verified) {
+        const session = await lucia.createSession(userData.id, {});
+        const sessionCookie = lucia.createSessionCookie(session.id);
+        return Result.Ok(sessionCookie);
+      }
     }
 
+    return Result.Err("Incorrect username, email and/or password");
+  } catch (e) {
     return Result.Err("An unknown error occurred");
   }
 };
