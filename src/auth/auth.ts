@@ -20,6 +20,8 @@ export const lucia = new Lucia(adapter, {
     return {
       // Attributes has the type of DatabaseUserAttributes
       username: attributes.username,
+      email: attributes.email,
+      verified: attributes.verified,
     };
   }
 });
