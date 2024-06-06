@@ -14,10 +14,15 @@ a.user-profile {
     align-items: center;
     column-gap: 15px;
     margin-left: 0px;
-    width: 205px;
+    max-width: 205px;
+    width: 100%;
+    flex: 0 0 205px;
     justify-content: center;
+    text-align: center;
 }
-
+.user-profile  span{
+display: block;
+}
 header .navbar-nav a.active {
     background: linear-gradient(90deg, #D900FF 3.19%, #8500FF 99.76%);
     border: 1px solid #D900FF;
@@ -32,12 +37,13 @@ header .navbar-nav a.active {
 .user-profile-img {
     width: 36px;
     height: 36px;
+    flex: 0 0 36px;
     border-radius: 100px;
     object-fit: cover;
     overflow: hidden;
     /* fill: #1F032E;
 filter: drop-shadow(0px 4px 32px rgba(218, 3, 247, 0.16)); */
-    box-shadow: 0px 4px 36px 0px rgba(158, 25, 199, 0.67);
+    /* box-shadow: 0px 4px 36px 0px rgba(158, 25, 199, 0.67); */
 }
 
 .navbar-toggler {
@@ -149,6 +155,21 @@ button#search-button {
 .header-ads.mobile-ads{
     display: none;
 }
+.welcome-btn {
+    width: 100%;
+    max-width: 400px;
+    flex: 0 0 400px;
+    mix-blend-mode: color-dodge;
+}
+.welcome-btn img{
+    width: 100%;
+}
+@media(max-width:1024px) {
+    .welcome-btn {
+        max-width: 300px;
+        flex: 0 0 auto;
+    }
+}
 @media(max-width:991px) {
     header {
         box-shadow: 0px 0px 18px 0px rgba(218, 3, 247, 0.16);
@@ -238,9 +259,10 @@ button#search-button {
     }
 
     .user-profile-img {
-        width: 60px;
-        height: 60px;
-        box-shadow: 0px 4px 20px 0px rgba(158, 25, 199, 0.67);
+        width: 50px;
+        height: 50px;
+        flex: 50px;
+        /* box-shadow: 0px 4px 20px 0px rgba(158, 25, 199, 0.67); */
     }
     .user-profile p{
         font-size: 16px;
@@ -249,14 +271,20 @@ button#search-button {
       
         display: flex;
     }
+    .welcome-btn {
+     max-width: 290px;
+     flex: auto;
+    }
 }
 
 @media(max-width:767px) {
   
     .header-right-side {
         width: calc(100% - 405px);
+        width: auto;
         justify-content: end;
     }
+    
     .header-ads {
         max-width: 290px;
       
@@ -272,8 +300,9 @@ button#search-button {
         display: none;
     }
     .header-ads.mobile-ads{
-        display: block;
+        /* display: block; */
         max-width: 100%;
+        overflow: hidden;
     }
    #search-form{
     display: block !important;
@@ -289,5 +318,8 @@ button#search-button {
     }
     .header-ads {
         max-width: 290px;
+    }
+    .welcome-btn {
+       display: none;
     }
 }
