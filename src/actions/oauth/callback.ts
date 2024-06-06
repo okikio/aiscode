@@ -10,7 +10,7 @@ import { generateUsernameFromEmail, generateRandomUsername } from "~/utils/usern
 import { oauthAccount, user } from "~/db/schema.ts";
 
 import { OAuth2RequestError } from "arctic";
-import { generateId } from "lucia";
+import { generateIdFromEntropySize } from "lucia";
 
 import { and, eq } from "drizzle-orm/expressions";
 import { lucia } from "~/auth/auth.ts";
@@ -152,7 +152,7 @@ export async function handler(props: z.infer<typeof schema>) {
     }
 
     // Perform a transaction to create the user and link the OAuth account atomically
-    const userId = generateId(15);
+    const userId = generateIdFromEntropySize(15);
     await db.transaction(async (tr) => {
       const existingUsers = await tr.select().from(user).where(eq(user.email, providerUser.email));
       let userData = existingUsers[0];

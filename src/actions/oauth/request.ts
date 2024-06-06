@@ -4,7 +4,7 @@ import { Result } from "@oxi/result";
 import { z } from "zod";
 
 import { generateCodeVerifier, generateState } from "arctic";
-import { generateId } from "lucia";
+import { generateIdFromEntropySize } from "lucia";
 
 import { github } from "~/auth/github.ts";
 import { google } from "~/auth/google.ts";
@@ -75,7 +75,7 @@ export async function handler(props: z.infer<typeof schema>) {
 
     // Insert the state and code verifier into the database
     await AstroDB.insert(OAuthRequests).values({
-      id: generateId(16),
+      id: generateIdFromEntropySize(16),
       state,
       codeVerifier,
       provider,
