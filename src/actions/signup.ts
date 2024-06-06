@@ -1,3 +1,5 @@
+import type { PostgresError } from "postgres";
+
 import { Result } from "@oxi/result";
 import { z } from "zod";
 
@@ -9,8 +11,6 @@ import { db } from "~/db/db.ts";
 import { generateId } from "lucia";
 import { generateRandomUsername } from "~/utils/username.ts";
 import { hash } from "~/utils/passsword.ts";
-
-import { PostgresError } from "postgres";
 
 export const schema = z.object({
   // username must be between 4 ~ 31 characters, and only consists of lowercase letters, 0-9, -, and _
@@ -46,7 +46,7 @@ export async function handler(props: z.infer<typeof schema>) {
     const sessionCookie = lucia.createSessionCookie(session.id);
     return Result.Ok(sessionCookie);
   } catch (e) {
-    if (e instanceof PostgresError && /unique_violation/i.test(e.code)) {
+    if ((e as PostgresError)?.code && /unique_violation/i.test((e as PostgresError).code)) {
       return Result.Err("Username already used");
     }
     

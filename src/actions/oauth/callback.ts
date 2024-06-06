@@ -1,4 +1,6 @@
 import type { GitHubTokens, GoogleTokens } from "arctic";
+import type { PostgresError } from "postgres";
+
 import { db as AstroDB, OAuthRequests, } from 'astro:db';
 
 import { Result } from "@oxi/result";
@@ -8,7 +10,6 @@ import { generateUsernameFromEmail, generateRandomUsername } from "~/utils/usern
 import { oauthAccount, user } from "~/db/schema.ts";
 
 import { OAuth2RequestError } from "arctic";
-import { PostgresError } from "postgres";
 import { generateId } from "lucia";
 
 import { and, eq } from "drizzle-orm/expressions";
@@ -76,7 +77,7 @@ export async function handler(props: z.infer<typeof schema>) {
   }
 
   // Fetch the authentication request from the database
-  const oauthRequests = await AstroDB.select().from(OAuthRequests).where(eq(OAuthRequests.columns.state, state));
+  const oauthRequests = await AstroDB.select().from(OAuthRequests).where(eq(OAuthRequests.state, state));
   const oauthRequest = oauthRequests?.[0];
 
   // Validate the state parameter
@@ -184,13 +185,13 @@ export async function handler(props: z.infer<typeof schema>) {
       return Result.Err("Invalid verification code");
     }
 
-    if (e instanceof PostgresError && /unique_violation/i.test(e.code)) {
+    if ((e as PostgresError)?.code && /unique_violation/i.test((e as PostgresError).code)) {
       return Result.Err("Unique constraint violation");
     }
 
     return Result.Err("An unknown error occurred");
   } finally {
     // Clean up the authentication request
-    await AstroDB.delete(OAuthRequests).where(eq(OAuthRequests.columns.state, state));
+    await AstroDB.delete(OAuthRequests).where(eq(OAuthRequests.state, state));
   }
 }

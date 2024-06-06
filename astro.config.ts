@@ -13,7 +13,7 @@ export default defineConfig({
     solid(),
     db(),
   ],
-  output: "hybrid",
+  output: "server",
   adapter: vercel(),
   experimental: {
     actions: true,

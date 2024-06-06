@@ -2,7 +2,7 @@ import type { APIContext } from "astro";
 import { lucia } from "~/auth/auth.ts";
 
 export const prerender = false;
-export async function POST(context: APIContext): Promise<Response> {
+export async function GET(context: APIContext): Promise<Response> {
   if (!context.locals.session)
     return context.redirect("/");
 

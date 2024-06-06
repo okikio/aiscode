@@ -8,4 +8,4 @@ export const sql = postgres(
   `postgres://${PGUSER}:${PGPASSWORD}@${PGHOST}:${PGPORT}/${PGDATABASE}`, 
   { prepare: false }
 );
-export const db = drizzle(sql, { logger: true });
+export const db = drizzle(sql, { logger: false });
