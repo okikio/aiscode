@@ -15,6 +15,6 @@ export const {
   GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET,
   GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET,
   AUTH_SECRET = encodeBase64(generateSecret(32)),
-  AUTH_REDIRECT_URL,
+  AUTH_REDIRECT_URL = "http://localhost:4321/api/oauth/[provider]/callback",
 } = process.env;
 export const PGPORT = +(process.env.PGPORT ?? 5432);

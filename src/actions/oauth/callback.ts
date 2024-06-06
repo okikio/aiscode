@@ -105,7 +105,9 @@ export async function handler(props: z.infer<typeof schema>) {
         providerUser = providerUserSchema.parse({
           id: googleUser.id,
           email: googleUser.email,
-          username: googleUser.email ? generateUsernameFromEmail(googleUser.email, 100_000) : generateRandomUsername(),
+          username: googleUser.email ? 
+            generateUsernameFromEmail(googleUser.email, 100_000) : 
+            generateRandomUsername(),
         });
         break;
 

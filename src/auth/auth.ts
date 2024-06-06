@@ -1,3 +1,5 @@
+import type { z } from "zod";
+
 import { DrizzlePostgreSQLAdapter } from "@lucia-auth/adapter-drizzle";
 import { Lucia } from "lucia";
 
@@ -18,7 +20,6 @@ export const lucia = new Lucia(adapter, {
     return {
       // Attributes has the type of DatabaseUserAttributes
       username: attributes.username,
-      githubId: attributes.github_id,
     };
   }
 });
@@ -33,7 +34,7 @@ declare module "lucia" {
   }
 }
 
-interface DatabaseUserAttributes {
+type UserType = typeof user.$inferSelect;
+interface DatabaseUserAttributes extends UserType {
   username: string;
-  github_id: number;
 }
