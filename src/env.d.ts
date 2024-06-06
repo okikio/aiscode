@@ -11,7 +11,7 @@ interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
 
-declare namespace App {
+declare namespace Astro {
   interface Locals {
     session: import("lucia").Session | null;
     user: import("lucia").User | null;

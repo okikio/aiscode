@@ -1,6 +1,5 @@
 ---
 import Video from './Video.astro'; // Assuming you have a Video component
-// import { useSession } from 'astro-auth'; // This hook should be implemented to check if the user is authenticated
 import type { FutureTournament, WinningData } from '../types'; // Assuming you have these types defined
 
 interface Props {
@@ -9,9 +8,12 @@ interface Props {
   winning_data: WinningData[];
 }
 
-// const { isAuthenticated } = useSession();
 const { announcements = [], future_tournaments, winning_data } = Astro.props as Props;
-const isAuthenticated = false;
+
+// This hook should be implemented to check if the user is authenticated
+const user = Astro.locals?.user;
+const username = user?.username;
+const isAuthenticated = !!username;
 ---
 <div class="help-box">
   <Video />

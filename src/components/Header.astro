@@ -1,9 +1,13 @@
 ---
-import { createSignal } from 'solid-js';
+export const prerender = false;
+
+// This hook should be implemented to check if the user is authenticated
+const _user = Astro.locals?.user;
+const username = _user?.username;
 
 // Simulate auth state and user data for the example. Replace with actual logic.
-const [isAuthenticated, setIsAuthenticated] = createSignal(false);
-const user = { name: 'UserName' };
+const isAuthenticated = !!username;
+const user = { name: username ?? 'UserName' };
 
 const location = Astro.url;
 
@@ -13,9 +17,9 @@ const routes = {
   profile: '/profile',
   contactUs: '/contact-us',
   submitGame: '/submit-game',
-  logout: '/logout',
+  logout: '/api/logout',
   login: '/login',
-  register: '/register',
+  register: '/signup',
   tournaments: '/tournaments',
   aboutUs: '/about-us',
   ourPartners: '/our-partners',
@@ -35,7 +39,7 @@ const routes = {
     <a class="navbar-brand" href={routes.home}><img class="logo" src="/front/images/iwin-logo.svg" alt="iwin-logo"></a>
     <div class="desktop-profile px-3 flex-lg-row flex-column align-items-center gap-3">
       <a class="user-profile" href={routes.profile}>
-        {isAuthenticated() && (
+        {isAuthenticated && (
           <>
             <p class="mb-0 f-13 text-white">Welcome <span class="text-uppercase primary-color fw-700">{user.name}</span></p>
             <div class="user-profile-img">
@@ -84,7 +88,7 @@ const routes = {
     </div>
     <div class="offcanvas offcanvas-start" id="navbarNav">
       <div class="offcanvas-header">
-        {isAuthenticated() && (
+        {isAuthenticated && (
           <a class="user-profile" href={routes.profile}>
             <p class="mb-0 f-13 text-white">Welcome <span class="text-uppercase primary-color fw-700">{user.name}</span></p>
             <div class="user-profile-img">
@@ -107,7 +111,7 @@ const routes = {
           <li class="nav-item">
             <a class="btn btn-primary {location.pathname === routes.contactUs ? 'active' : ''}" href={routes.contactUs}>Contact</a>
           </li>
-          {isAuthenticated() ? (
+          {isAuthenticated ? (
             <>
               <!-- Uncomment if needed
               <li class="nav-item">
@@ -147,7 +151,7 @@ const routes = {
             <li class="nav-item">
               <div class="games-room-btns mobile-btn">
                 <a href={routes.home} class="btn rounded-pill gradient-bg">Practice</a>
-                {isAuthenticated() ? (
+                {isAuthenticated ? (
                   <a href={routes.tournaments} class="btn rounded-pill btn-light" style="background-color: red; border-color: red;">Tournaments</a>
                 ) : (
                   <a href={routes.login} class="btn rounded-pill btn-light" style="background-color: red; border-color: red;">Tournaments</a>
@@ -175,7 +179,7 @@ const routes = {
               <li><a href="https://www.linkedin.com" target="_blank"><i class="fa-brands fa-linkedin"></i></a></li>
             </ul>
           </div>
-          {isAuthenticated() ? (
+          {isAuthenticated ? (
             <div class="log-btn">
               <a href={routes.logout} class="btn gaming-btn rounded-0">Sign Out</a>
             </div>

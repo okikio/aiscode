@@ -1,0 +1,61 @@
+---
+// Import the necessary layout component if you have one
+import AuthLayout from '~/layouts/Auth.astro';
+
+const googleLoginUrl = '/api/oauth/google';
+const facebookLoginUrl = '/api/oauth/facebook';
+const loginSubmitUrl = '/api/login';
+const registerUrl = '/signup';
+const resetPasswordUrl = '/api/oauth/reset-password';
+const csrfToken = 'your-csrf-token'; // Replace with actual token fetching logic if needed
+
+// This hook should be implemented to check if the user is authenticated
+const user = Astro.locals?.user;
+if (user) {
+	return Astro.redirect("/");
+}
+
+
+export const prerender = false;
+---
+<AuthLayout title="SignIn">
+<div class="login-sec">
+  <div class="col-lg-5 col-11 m-auto">
+    <!-- <div class="text-center mb-3">
+      <div class="header-ads mobile-ads">
+        <img src="/front/images/ad-left.png" alt="" class="img-fluid">
+      </div>
+    </div> -->
+    <div class="login-from">
+      <div class="form-header">
+        <h2 class="f-15 text-uppercase text-white text-center mb-0 fw-bold montserrat-font">Log in with</h2>
+      </div>
+      <div class="d-flex gap-lg-5 gap-3 justify-content-center py-md-2 py-2 my-1">
+        <a href={googleLoginUrl}><img src="/front/images/google.png" alt="google" class="img-fluid"></a>
+        <a href={facebookLoginUrl} class="d-flex align-items-center"><img src="/front/images/facebook.png" alt="facebook" class="img-fluid"></a>
+      </div>
+      <div class="divider d-flex align-items-center mb-lg-4 mb-2">
+        <p class="text-center text-white mx-3 mb-0 light-dark f-12 fw-300 montserrat-font">OR</p>
+      </div>
+      <form action={loginSubmitUrl} method="post" id="loginForm">
+        <input type="hidden" name="_token" value={csrfToken} />
+        <div class="mb-3">
+          <input type="email" name="email" class="form-control" id="email" placeholder="Enter Email" required />
+        </div>
+        <div class="mb-3">
+          <input type="password" name="password" class="form-control" id="password" placeholder="Enter Password" required />
+        </div>
+        <div class="mb-3 text-center">
+          <button class="gaming-btn btn btn-primary" type="submit">
+            <span class="btn">Log In</span>
+          </button>
+        </div>
+      </form>
+      <div class="form-footer text-center">
+        <p class="mb-0 f-13 text-white">Don't have any account? <a href={registerUrl} class="primary-color">Sign Up</a></p>
+        <a href={resetPasswordUrl} class="text-white f-13">Forgot Password?</a>
+      </div>
+    </div>
+  </div>
+</div>
+</AuthLayout>

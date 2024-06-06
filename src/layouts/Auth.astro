@@ -4,21 +4,21 @@ import Sidebar from '../components/Sidebar.astro';
 import Footer from '../components/Footer.astro';
 
 interface Props {
-  pageTitle: string;
-  csrfToken: string;
+  title: string;
+  csrfToken?: string;
 }
 
-const { pageTitle, csrfToken } = Astro.props as Props;
+const { title, csrfToken } = Astro.props as Props;
 ---
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="csrf-token" content={csrfToken} />
+  <!-- <meta name="csrf-token" content={csrfToken} /> -->
   <link rel="icon" type="image/png" sizes="32x32" href="/front/images/favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="/front/images/favicon-16x16.png" />
-  <title>IWin Gaming | {pageTitle}</title>
+  <title>IWin Gaming | {title}</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" referrerpolicy="no-referrer" />
   <link rel="stylesheet" type="text/css" href="/front/css/bootstrap.min.css" media="all" />
   <link rel="stylesheet" type="text/css" href="/front/css/owl.carousel.min.css" media="all" />
@@ -64,11 +64,11 @@ const { pageTitle, csrfToken } = Astro.props as Props;
   <footer id="footer" class="primary-bg overflow-hidden">
     <Footer />
   </footer>
-  <script src="/front/js/jquery.min.js"></script>
-  <script src="/front/js/bundle.min.js"></script>
-  <script src="/front/js/owl.carousel.min.js"></script>
-  <script src="/front/js/slider.js"></script>
-  <script src="/front/toastr/toastr.min.js"></script>
+  <script src="/front/js/jquery.min.js" is:inline></script>
+  <script src="/front/js/bundle.min.js" is:inline></script>
+  <script src="/front/js/owl.carousel.min.js" is:inline></script>
+  <script src="/front/js/slider.js" is:inline></script>
+  <script src="/front/toastr/toastr.min.js" is:inline></script>
 
   <slot name="scripts" />
   <slot name="customJs" />
