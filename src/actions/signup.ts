@@ -8,48 +8,89 @@ import { lucia } from "~/auth/auth.ts";
 import { user } from "~/db/schema.ts";
 import { db } from "~/db/db.ts";
 
-import { generateId } from "lucia";
+import { generateIdFromEntropySize } from "lucia";
 import { generateRandomUsername } from "~/utils/username.ts";
 import { hash } from "~/utils/passsword.ts";
 
+
+// Define the validation schema for the input properties
 export const schema = z.object({
-  // username must be between 4 ~ 31 characters, and only consists of lowercase letters, 0-9, -, and _
-  // keep in mind some database (e.g. mysql) are case insensitive
+  /**
+   * Username must be between 4 to 31 characters, consisting of lowercase letters, 0-9, '-', and '_'.
+   * Note: Some databases (e.g., MySQL) are case insensitive.
+   */
   username: z.string().regex(/^[a-z0-9_-]+$/).min(3).max(31, { message: "Invalid username" }).optional(),
+  /**
+   * Email must be a valid email address.
+   */
   email: z.string().email({ message: "Invalid email address" }),
+  /**
+   * Password must be between 6 to 255 characters.
+   */
   password: z.string().min(6).max(255, { message: "Invalid password" }),
 });
 
+/**
+ * Handles the user registration request by validating the input properties, checking if the email already exists,
+ * hashing the password, and creating a new user and session if registration is successful.
+ * 
+ * @param {z.infer<typeof schema>} props - The input properties containing username, email, and password.
+ * @returns A Result object containing the session cookie on success or an error message on failure.
+ * 
+ * @example
+ * const response = await handler({ email: "test@example.com", password: "password123" });
+ * if (response.isOk()) {
+ *   console.log(response.unwrap()); // Session cookie
+ * } else {
+ *   console.log(response.unwrapErr()); // Error message
+ * }
+ * 
+ * @remarks
+ * This function ensures that the email is unique and generates a random username if one is not provided. It uses the Lucia authentication library to create sessions.
+ */
 export async function handler(props: z.infer<typeof schema>) {
   const { username, email, password } = props;
+
+  // Validate the input properties using the schema
   const { success, error } = schema.safeParse(props);
   if (!success) return Result.Err(error);
 
   try {
+    // Check if a user with the provided email already exists in the database
     const existingUsers = await db.select().from(user).where(eq(user.email, email));
     const existingUser = existingUsers[0];
     if (existingUser) {
       return Result.Err("Email already exists");
     }
 
-    const userId = generateId(16); // 16 characters long
+    // Generate a unique ID for the new user
+    const userId = generateIdFromEntropySize(16); // 16 characters long
+
+    // Hash the user's password
     const passwordHash = await hash(password);
 
+    // Insert the new user into the database
     await db.insert(user).values({
       id: userId,
-      username: username ?? generateRandomUsername(),
+      username: username ?? generateRandomUsername(), // Generate a random username if not provided
       hash: passwordHash,
-      email: email
+      email: email,
+      verified: null, // Verification status is initially null
     });
 
+    // Create a new session for the user
     const session = await lucia.createSession(userId, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
+
+    // Return the session cookie as the result
     return Result.Ok(sessionCookie);
   } catch (e) {
+    // Handle unique constraint violations (e.g., username already used)
     if ((e as PostgresError)?.code && /unique_violation/i.test((e as PostgresError).code)) {
       return Result.Err("Username already used");
     }
     
+    // Return a generic error for any other issues
     return Result.Err("An unknown error occurred");
   }
-};
+}
