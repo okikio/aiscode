@@ -1,10 +1,8 @@
-import { pgTable, text, varchar, timestamp, integer } from 'drizzle-orm/pg-core';
+import { pgTable, text, varchar, timestamp, integer, primaryKey } from 'drizzle-orm/pg-core';
 
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
   username: varchar('username').notNull(),
-  githubId: text("github_id").unique(),
-  googleId: text("google_id").unique(),
   hash: varchar('hash'),
   email: varchar('email').unique().notNull(),
   image: text("image"),
@@ -22,31 +20,29 @@ export const session = pgTable("session", {
   }).notNull()
 })
 
-// // Accounts represent the different types of ways a user can signin
-// export const accounts = pgTable("account", {
-//   userId: text('user_id').notNull().references(() => user.id, { onDelete: "cascade" }),
+// Accounts represent the different types of ways a user can signin
+export const oauthAccount = pgTable("oauth_account", {
+  userId: text('user_id').notNull().references(() => user.id, { onDelete: "cascade" }),
 
-//   // Future proofing our implmentation
-//   type: text("type").notNull(),
-//   provider: text("provider").notNull(),
-//   providerAccountId: text("providerAccountId").notNull(),
+  provider: text("provider").notNull(),
+  providerAccountId: text("providerAccountId").notNull(),
 
-//   // The password field stores the base64-encoded string representing the hashed and salted password.
-//   password: varchar('password'),
-//   refresh_token: text("refresh_token"),
-//   access_token: text("access_token"),
-//   expires_at: integer("expires_at"),
-//   token_type: text("token_type"),
-//   scope: text("scope"),
-//   id_token: text("id_token"),
-//   session_state: text("session_state"),
-// },
-//   (account) => ({
-//     compoundKey: primaryKey({ 
-//       columns: [account.provider, account.providerAccountId] 
-//     }),
-//   })
-// )
+  // The password field stores the base64-encoded string representing the hashed and salted password.
+  // refreshToken: text("refresh_token"),
+  // accessToken: text("access_token"),
+  // expiresAt: integer("expires_at"),
+  // tokenType: text("token_type"),
+  // scope: text("scope"),
+
+  // idToken: text("id_token"),  // Stores the ID token for user authentication
+  // sessionState: text("session_state"),  // Manages session state for SSO and stateful sessions
+},
+  (account) => ({
+    compoundKey: primaryKey({ 
+      columns: [account.provider, account.providerAccountId] 
+    }),
+  })
+)
 
 // // VerificationTokens table schema
 // export const verificationTokens = pgTable("verificationToken",

@@ -11,9 +11,12 @@ import { z } from "zod";
 export const schema = z.object({
   // username must be between 4 ~ 31 characters, and only consists of lowercase letters, 0-9, -, and _
   // keep in mind some database (e.g. mysql) are case insensitive
-  username: z.string().regex(/^[a-z0-9_-]+$/).min(3).max(31, { message: "Invalid username" }),
-  email: z.string().email({ message: "Invalid email address" }),
+  username: z.string().regex(/^[a-z0-9_-]+$/).min(3).max(31, { message: "Invalid username" }).optional(),
+  email: z.string().email({ message: "Invalid email address" }).optional(),
   password: z.string().min(6).max(255, { message: "Invalid password" }),
+}).refine(data => data.username || data.email, {
+  message: "Either username or email must be present",
+  path: ['username', 'email'],
 });
 
 export async function handler(props: z.infer<typeof schema>) {
@@ -27,22 +30,23 @@ export async function handler(props: z.infer<typeof schema>) {
       hash: user.hash
     }).from(user).where(
       or(
-        eq(user.username, username),
-        eq(user.email, email)
+        eq(user.username, username!),
+        eq(user.email, email!),
       )
     );
 
     const userData = users?.[0];
     if (userData) {
-      const verified = await verify(userData.hash, password);
-      if (verified) {
+      if (userData.hash && await verify(userData.hash, password)) {
         const session = await lucia.createSession(userData.id, {});
         const sessionCookie = lucia.createSessionCookie(session.id);
         return Result.Ok(sessionCookie);
       }
+
+      return Result.Err("Incorrect username, email and/or password");
     }
 
-    return Result.Err("Incorrect username, email and/or password");
+    return Result.Err("User doesn't exist");
   } catch (e) {
     return Result.Err("An unknown error occurred");
   }

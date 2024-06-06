@@ -1,57 +1,28 @@
-import type { APIContext } from "astro"; 
-import { db, AuthRequests } from 'astro:db';
+import type { APIContext } from "astro";
+import type { z } from "zod";
+import * as request from "~/actions/oauth/request.ts";
 
-import { generateCodeVerifier, generateState } from "arctic";
-
-import { github } from "~/auth/github.ts";
-import { google } from "~/auth/google.ts";
-
-import { generateId, generateIdFromEntropySize } from "lucia";
-
+// Example usage in the API route
 export const prerender = false;
 export async function GET(context: APIContext): Promise<Response> {
-  const providerName = context.params.provider;
+  const provider = context.params.provider! as z.infer<typeof request.schema>["provider"];
 
-  const state = generateState();
-  const codeVerifier = generateCodeVerifier();
-
-  let url: URL;
-  switch (providerName) {
-    case "google":
-      url = await google.createAuthorizationURL(state, codeVerifier, {
-        scopes: ["profile", "email"]
-      })
-      break;
-    case "github":
-      url = await github.createAuthorizationURL(state);
-      break;
-    default:
+  // Call the handler function and handle the Result
+  const result = await request.handler({ provider });
+  return result.match(
+    url => {
+    // Redirect to the authorization URL if successful
+      return context.redirect(url);
+    },
+    err => {
+    // Return an error response if there was an error
       return new Response(
         JSON.stringify({
-          error: "OAuth provider specified doesn't exist"
+          error: typeof err === "string" ? err : err.message
         }), {
         status: 400,
         headers: { "Content-Type": "application/json" }
       });
-  }
-
-  // Insert the state and code verifier into the database
-  await db.insert(AuthRequests).values({
-    id: generateId(16),
-    state,
-    codeVerifier,
-    provider: providerName,
-    created_at: new Date()
-  });
-
-  // context.cookies.set(`${providerName}_oauth_state`, state, {
-  //   path: "/",
-  //   // Set to `true` when using HTTPS
-  //   secure: MODE === "production",
-  //   httpOnly: true,
-  //   maxAge: 60 * 10,
-  //   sameSite: "lax"
-  // });
-
-  return context.redirect(url.toString());
+    }
+  );
 }
