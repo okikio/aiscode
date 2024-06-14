@@ -1,15 +1,16 @@
 import type { PostgresError } from "postgres";
 
+import { generateEmailVerificationCode, sendVerificationCode } from "~/utils/verification-code.ts";
+import { generateRandomUsername } from "~/utils/username.ts";
 import { Result } from "@oxi/result";
 import { z } from "zod";
 
-import { eq } from "drizzle-orm/expressions"
+import { eq } from "drizzle-orm/expressions";
 import { lucia } from "~/auth/auth.ts";
 import { user } from "~/db/schema.ts";
 import { db } from "~/db/db.ts";
 
 import { generateIdFromEntropySize } from "lucia";
-import { generateRandomUsername } from "~/utils/username.ts";
 import { hash } from "~/utils/passsword.ts";
 
 
@@ -28,6 +29,18 @@ export const schema = z.object({
    * Password must be between 6 to 255 characters.
    */
   password: z.string().min(6).max(255, { message: "Invalid password" }),
+
+  /**
+   * above_18 is a required boolean value that indicates whether the user is above 18 years old.
+   */
+  above_18: z.union([z.literal("18+"), z.boolean()])
+    .transform(value => {
+      if (value === "18+") return true;
+      return value;
+    })
+    .refine(value => typeof value === 'boolean', {
+      message: "above_18 must be a boolean value",
+    }),
 });
 
 /**
@@ -56,6 +69,10 @@ export async function handler(props: z.infer<typeof schema>) {
   if (!success) return Result.Err(error);
 
   try {
+    console.log({
+      email: email
+    })
+
     // Check if a user with the provided email already exists in the database
     const existingUsers = await db.select().from(user).where(eq(user.email, email));
     const existingUser = existingUsers[0];
@@ -77,6 +94,10 @@ export async function handler(props: z.infer<typeof schema>) {
       email: email,
       verified: null, // Verification status is initially null
     });
+
+    const verificationCode = await generateEmailVerificationCode(userId, email);
+    await sendVerificationCode(email, verificationCode)
+      .catch(x => console.log(x));
 
     // Create a new session for the user
     const session = await lucia.createSession(userId, {});

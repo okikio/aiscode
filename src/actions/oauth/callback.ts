@@ -162,7 +162,8 @@ export async function handler(props: z.infer<typeof schema>) {
         const userValues = await tr.insert(user).values({
           id: userId,
           username: providerUser.username,
-          email: providerUser.email
+          email: providerUser.email,
+          verified: null
         }).returning();
         userData = userValues[0]!;
       }

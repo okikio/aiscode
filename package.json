@@ -9,24 +9,31 @@
     "start": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "swa:start": "swa start",
+    "swa:login": "swa login",
+    "swa:deploy": "swa deploy"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   },
   "dependencies": {
-    "@astrojs/db": "^0.11.4",
-    "@astrojs/solid-js": "^4.2.0",
+    "@astrojs/db": "^0.11.5",
+    "@astrojs/solid-js": "^4.3.0",
     "@astrojs/tailwind": "^5.1.0",
-    "@astrojs/vercel": "^7.6.0",
+    "@astrojs/vercel": "^7.7.0",
     "@lucia-auth/adapter-drizzle": "^1.0.7",
     "@node-rs/argon2": "^1.8.3",
     "@octokit/rest": "^20.1.1",
     "@orama/orama": "^2.0.19",
     "@oxi/result": "npm:@jsr/oxi__result@^0.3.0",
-    "@std/encoding": "npm:@jsr/std__encoding@1.0.0-rc.1",
-    "arctic": "^1.9.0",
-    "astro": "^4.9.3",
-    "drizzle-orm": "^0.31.1",
-    "googleapis": "^139.0.0",
+    "@std/encoding": "npm:@jsr/std__encoding@1.0.0-rc.2",
+    "arctic": "^1.9.1",
+    "astro": "^4.10.2",
+    "drizzle-orm": "^0.31.2",
+    "googleapis": "^140.0.0",
     "lucia": "^3.2.0",
+    "nodemailer": "^6.9.13",
     "oslo": "^1.2.0",
     "postgres": "^3.4.4",
     "solid-js": "^1.8.17",
@@ -35,11 +42,14 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.7.0",
+    "@azure/static-web-apps-cli": "^1.1.9",
+    "@types/jquery": "^3.5.30",
     "@types/node": "^20.14.2",
+    "@types/nodemailer": "^6.4.15",
     "dotenv": "^16.4.5",
-    "drizzle-kit": "^0.22.2",
+    "drizzle-kit": "^0.22.7",
     "jsr": "^0.12.4",
     "typescript": "^5.4.5"
   },
-  "packageManager": "pnpm@9.2.0+sha512.98a80fd11c2e7096747762304106432b3ddc67dcf54b5a8c01c93f68a2cd5e05e6821849522a06fb76284d41a2660d5e334f2ee3bbf29183bf2e739b1dafa771"
+  "packageManager": "pnpm@9.3.0+sha512.ee7b93e0c2bd11409c6424f92b866f31d3ea1bef5fbe47d3c7500cdc3c9668833d2e55681ad66df5b640c61fa9dc25d546efa54d76d7f8bf54b13614ac293631"
 }

@@ -15,7 +15,9 @@ export async function GET(context: APIContext): Promise<Response> {
       return context.redirect("/");
     },
     err => {
-      console.error(err);
+      console.error({
+        error: typeof err === "string" ? err : (err?.flatten?.() ?? err?.message)
+      });
       return new Response(
         null, {
         status: 400,

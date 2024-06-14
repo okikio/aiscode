@@ -8,10 +8,6 @@ export async function POST(context: APIContext): Promise<Response> {
   const password = formData.get("password")! as string;
   const email = formData.get("email")! as string;
 
-  console.log({
-    username, password, email,
-  })
-
   const result = await login.handler({ username, password, email, });
   return result.match(
     cookie => {

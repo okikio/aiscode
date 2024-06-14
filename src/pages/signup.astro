@@ -26,46 +26,23 @@ const csrfToken = 'your-csrf-token'; // Replace with actual token fetching logic
         <form method="post" id="registerForm" name="registerForm" action="/api/signup">
           <input type="hidden" name="_token" value={csrfToken} />
           <div class="row g-2 align-items-center">
-            <!-- <div class="col-md-6 form-group">
-              <input type="text" class="form-control" id="first_name" placeholder="First Name" name="first_name" required />
-            </div>
-            <div class="col-md-6 form-group">
-              <input type="text" class="form-control" id="last_name" placeholder="Last Name" name="last_name" required />
-            </div> -->
             <div class="col-md-12 form-group">
-              <input type="text" class="form-control" id="username" placeholder="User Name" name="username" required />
+              <input type="text" class="form-control" id="username" placeholder="Username" name="username" required />
             </div>
             <div class="col-md-12 form-group">
-              <input type="email" class="form-control" id="email" placeholder="Enter Email" name="email" required />
+              <input type="email" class="form-control" id="email" placeholder="Email" name="email" required />
             </div>
             <div class="col-md-6 form-group">
-              <input type="password" class="form-control" id="password" placeholder="Enter Password" name="password" required />
+              <input type="password" class="form-control" id="password" placeholder="Password" name="password" autocomplete="new-password" required />
             </div>
             <div class="col-md-6 form-group">
-              <input type="password" class="form-control" id="confirm_password" placeholder="ReEnter Password" name="confirm_password" autocomplete="new-password" required />
+              <input type="password" class="form-control" id="confirm_password" placeholder="Confirm Password" name="confirm_password" autocomplete="new-password" required />
             </div>
-            <!-- <div class="col-md-12 form-group">
-              <input type="text" class="form-control" id="phone_number" placeholder="Phone Number" name="phone_number" required />
-            </div> -->
+            <div class="form-group gx-2">
+              <input type="checkbox" id="above_18" name="above_18" value="18+" required />
+              <label class="text-white pl-2" for="above_18">I confirm that I am above 18 years old</label>
+            </div>
           </div>
-          <!-- <div class="row mt-2 gx-2 gy-2">
-            <p class="montserrat-font f-12 mb-1 text-uppercase text-white">Choose the date of birth</p>
-            <div class="col-md-4 form-group">
-              <select class="form-select" aria-label="Default select example" id="yearDropdownField" name="year">
-              </select>
-            </div>
-            <div class="col-md-4">
-              <select class="form-select" aria-label="Default select example" id="monthDropdownField" name="month">
-              </select>
-            </div>
-            <div class="col-md-4">
-              <select class="form-select" aria-label="Default select example" id="dateDropdownField" name="date">
-              </select>
-            </div>
-            <p class="montserrat-font f-12 mt-1 mb-1 text-white">
-              Please Note: You must be over 18 to create an account.
-            </p>
-          </div> -->
           <div class="mb-3 mt-1 text-center">
             <button class="gaming-btn btn btn-primary" type="submit">
               <span class="btn">Sign Up</span>
@@ -90,6 +67,9 @@ const csrfToken = 'your-csrf-token'; // Replace with actual token fetching logic
           confirm_password: {
             required: true,
             equalTo: '#password'
+          },
+          above_18: {
+            required: true
           }
         },
         messages: {
@@ -100,51 +80,12 @@ const csrfToken = 'your-csrf-token'; // Replace with actual token fetching logic
           confirm_password: {
             required: 'Please confirm your password',
             equalTo: 'Passwords do not match'
+          },
+          above_18: {
+            required: 'Please confirm that you are 18 years old and above'
           }
         }
       });
     });
-
-    // Populate date dropdowns
-    // const yearDropdown = document.getElementById('yearDropdownField');
-    // const monthDropdown = document.getElementById('monthDropdownField');
-    // const dateDropdown = document.getElementById('dateDropdownField');
-
-    // for (let year = new Date().getFullYear(); year >= 1900; year--) {
-    //   let option = document.createElement('option');
-    //   option.value = year;
-    //   option.text = year;
-    //   yearDropdown.add(option);
-    // }
-
-    // for (let month = 1; month <= 12; month++) {
-    //   let option = document.createElement('option');
-    //   option.value = month;
-    //   option.text = month;
-    //   monthDropdown.add(option);
-    // }
-
-    // for (let date = 1; date <= 31; date++) {
-    //   let option = document.createElement('option');
-    //   option.value = date;
-    //   option.text = date;
-    //   dateDropdown.add(option);
-    // }
-
-    // function onChangeYearAndMonth() {
-    //   const selectedYear = parseInt(yearDropdown.value);
-    //   const selectedMonth = parseInt(monthDropdown.value);
-    //   const daysInMonth = new Date(selectedYear, selectedMonth, 0).getDate();
-    //   dateDropdown.innerHTML = '';
-    //   for (let date = 1; date <= daysInMonth; date++) {
-    //     let option = document.createElement('option');
-    //     option.value = date;
-    //     option.text = date;
-    //     dateDropdown.add(option);
-    //   }
-    // }
-
-    // yearDropdown.addEventListener('change', onChangeYearAndMonth);
-    // monthDropdown.addEventListener('change', onChangeYearAndMonth);
   </script>
 </AuthLayout>

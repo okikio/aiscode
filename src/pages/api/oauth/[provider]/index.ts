@@ -18,7 +18,7 @@ export async function GET(context: APIContext): Promise<Response> {
     // Return an error response if there was an error
       return new Response(
         JSON.stringify({
-          error: typeof err === "string" ? err : err.message
+          error: typeof err === "string" ? err : (err?.flatten?.() ?? err?.message)
         }), {
         status: 400,
         headers: { "Content-Type": "application/json" }

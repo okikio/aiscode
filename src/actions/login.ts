@@ -8,6 +8,7 @@ import { db } from "~/db/db.ts";
 import { Result } from "@oxi/result";
 import { z } from "zod";
 
+import { generateEmailVerificationCode, sendVerificationCode } from "~/utils/verification-code.ts";
 
 // Define the validation schema for the input properties
 export const schema = z.object({
@@ -15,16 +16,16 @@ export const schema = z.object({
    * Username must be between 4 to 31 characters, consisting of lowercase letters, 0-9, '-', and '_'.
    * Note: Some databases (e.g., MySQL) are case insensitive.
    */
-  username: z.string().regex(/^[a-z0-9_-]+$/).min(3).max(31, { message: "Invalid username" }).optional(),
+  username: z.string().regex(/^[a-z0-9_-]+$/).min(3).max(31, { message: "Invalid username" }).optional().nullable(),
   /**
    * Email must be a valid email address.
    */
-  email: z.string().email({ message: "Invalid email address" }).optional(),
+  email: z.string().email({ message: "Invalid email address" }).optional().nullable(),
   /**
    * Password must be between 6 to 255 characters.
    */
   password: z.string().min(6).max(255, { message: "Invalid password" }),
-}).refine(data => data.username || data.email, {
+}).refine(data => (data.username && data.username !== null) || (data.email && data.email !== null), {
   message: "Either username or email must be present",
   path: ['username', 'email'],
 });
@@ -58,7 +59,8 @@ export async function handler(props: z.infer<typeof schema>) {
     // Query the database for the user by username or email
     const users = await db.select({
       id: user.id,
-      hash: user.hash
+      hash: user.hash,
+      email: user.email,
     }).from(user).where(
       or(
         eq(user.username, username!),
@@ -70,6 +72,11 @@ export async function handler(props: z.infer<typeof schema>) {
     if (userData) {
       // Verify the user's password
       if (userData.hash && await verify(userData.hash, password)) {
+
+        const verificationCode = await generateEmailVerificationCode(userData.id, userData.email);
+        await sendVerificationCode(userData.email, verificationCode)
+          .catch(x => console.log(x));
+
         // Create a session and session cookie if authentication is successful
         const session = await lucia.createSession(userData.id, {});
         const sessionCookie = lucia.createSessionCookie(session.id);
